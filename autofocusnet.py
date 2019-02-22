@@ -46,9 +46,9 @@ batch_size = 28
 # In[3]:
 
 
-train_data_path = 'vcm_data/train_data_one_im_norm_2set_256_vcm.npy'
+train_data_path = 'vcm_data/n_train_data_one_im_norm_2set_256_vcm.npy'
 #test_data_path = 'test_data.npy'
-train_label_path = 'vcm_data/train_label_one_im_norm_2set_256_vcm.npy'
+train_label_path = 'vcm_data/n_train_label_one_im_norm_2set_256_vcm.npy'
 #test_label_path = 'test_label.npy'
 
 
@@ -67,44 +67,46 @@ print(train_data.shape)
 print(train_label.shape)
 
 
-# In[6]:
+# In[12]:
 
 
 # In[7]:
-input_image1 = Input(shape=(256,256,1))
+input_image1 = Input(shape=(256,256,1), name = "input")
 #layer1_1 = Conv2D(4, (8, 8), 8,padding='valid',activation=None,use_bias=False,kernel_initializer = my_init,trainable=True,name='layer1')(input_image1)
-layer1_1 = Conv2D(4, (8, 8), 8,padding='valid',activation=relu)(input_image1)
+layer1_1 = Conv2D(4, (8, 8), 8,padding='valid',activation=relu, name="Conv1_1")(input_image1)
 #layer1_1 = LeakyReLU(0.1)(layer1_1)
 
-layer2_1 = Conv2D(8, (4, 4), 4,padding='valid',activation=relu)(layer1_1)
+layer2_1 = Conv2D(8, (4, 4), 4,padding='valid',activation=relu, name="Conv2_1")(layer1_1)
 #layer2_1 = LeakyReLU(0.1)(layer2_1)
 
-layer3_1 = Conv2D(8, (4, 4), 4,padding='valid',activation=relu)(layer2_1)
+layer3_1 = Conv2D(8, (4, 4), 4,padding='valid',activation=relu, name="Conv3_1")(layer2_1)
 #layer3_1 = LeakyReLU(0.1)(layer3_1)
 
 
-flattened = Flatten()(layer3_1)
-dense1 = Dense(1024)(flattened)
-dense1 = LeakyReLU(0.1)(dense1)
+flattened = Flatten(name="flat")(layer3_1)
+dense1 = Dense(1024, name="d1")(flattened)
+LReLU1 = LeakyReLU(0.1, name="lr1")(dense1)
 #dense1 = Dropout(0.8)(dense1)
 
-dense2 = Dense(512)(dense1)
-dense2 = LeakyReLU(0.1)(dense2)
+dense2 = Dense(512, name="d2")(LReLU1)
+LReLU2 = LeakyReLU(0.1, name="lr2")(dense2)
 #dense2 = Dropout(0.5)(dense2)
 
-dense3 = Dense(10)(dense2)
-dense3 = LeakyReLU(0.1)(dense3)
+dense3 = Dense(10, name="d3")(LReLU2)
+LReLU3 = LeakyReLU(0.1, name="lr3")(dense3)
 
-output_position = Dense(1)(dense3)
+output_position = Dense(1, name="out")(LReLU3)
 print(output_position)
 
 model = Model(inputs=input_image1, outputs=output_position)
-
+model.summary()
 
 
 
 print(model.output_shape)
 
+
+# In[7]:
 
 
 opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0001)
@@ -115,4 +117,31 @@ model.fit(train_data[:,:,:,0:1], abs(train_label[:,1:2]-train_label[:,0:1])/100,
 
 
 model.save('my_model_step1.h5')
+
+
+# In[8]:
+
+
+# print(train_label[:, :10])
+
+
+# In[9]:
+
+
+# import matplotlib.pyplot as plt
+# %matplotlib inline
+# plt.imshow(train_data[1, :, :, 0])
+
+
+# In[10]:
+
+
+# from tensorflow.python.keras.models import load_model
+# model = load_model('my_model_step1.h5')
+
+
+# In[11]:
+
+
+# model.predict(train_data[1:2, :, :, :1])
 
