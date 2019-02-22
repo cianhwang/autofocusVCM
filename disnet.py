@@ -96,11 +96,11 @@ print(model.output_shape)
 
 
 opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0001)
-model.compile(loss='mse', optimizer=opt)
+model.compile(loss='mse', optimizer='Adam')
 
 model.fit(train_data[:,:,:,:1], to_categorical(train_label[:, 2:]), epochs = epochs,batch_size = batch_size,verbose=1)
 
-model.save('my_model_dis1.h5')
+model.save('my_model_dis2.h5')
 
 
 # In[19]:
