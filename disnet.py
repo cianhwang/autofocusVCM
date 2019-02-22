@@ -38,7 +38,7 @@ d_max = 10
 blur_filter_size = 11
 blur_range = 10
 image_size = 256
-epochs = 300
+epochs = 200
 batch_size = 28
 
 
@@ -100,7 +100,8 @@ model.compile(loss='mse', optimizer='Adam')
 
 model.fit(train_data[:,:,:,:1], to_categorical(train_label[:, 2:]), epochs = epochs,batch_size = batch_size,verbose=1)
 
-model.save('my_model_dis2.h5')
+model.save('my_model_dis.h5')
+model.save_weights('my_model_weights.h5')
 
 
 # In[19]:
