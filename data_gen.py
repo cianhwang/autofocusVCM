@@ -1,7 +1,7 @@
 
 # coding: utf-8
 
-# In[16]:
+# In[1]:
 
 
 import numpy as np
@@ -15,8 +15,8 @@ from scipy import signal
 # from PIL import Image
 #img = Image.open('image.png').convert('LA')
 #img.save('greyscale.png')
-#import matplotlib.pyplot as plt
-#get_ipython().run_line_magic('matplotlib', 'inline')
+# import matplotlib.pyplot as plt
+# %matplotlib inline
 
 
 # In[2]:
@@ -55,8 +55,8 @@ Label = np.zeros([Num_of_data,2],np.float32)
 
 
 Ground_truth_space = [475, 500, 525, 550, 600, 650, 675, 725, 800, 875, 1000]
-Ground_truth_space = Ground_truth_space[::-1]
-Data_space = Ground_truth_space
+Data_space = list(range(1000, 450, -25))
+Data_space = Data_space[::-1]
 print("Data_space size:", len(Data_space))
 #print Data_space
 
@@ -173,11 +173,13 @@ for i in range(Num_of_data):
     
     current_position = random.choice(Ground_truth_space)
     defocus1 = random.choice(Data_space)
+#     print(current_position)
+#     print(defocus1)
     if defocus1 == current_position:
         DATA[i,:,:,0] = Focused_image[Focused_image.shape[0]//2-image_size1//2:Focused_image.shape[0]//2+image_size1//2,Focused_image.shape[1]//2-image_size2//2:Focused_image.shape[1]//2+image_size2//2]
         DATA[i,:,:,0] = (DATA[i,:,:,0] - DATA[i,:,:,0].min())/(DATA[i,:,:,0].max() - DATA[i,:,:,0].min())
     else:
-        model_mat = scipy.io.loadmat('vcm_models/Model_parameters_{}.mat'.format(current_position))  ###########################
+        model_mat = scipy.io.loadmat('vcm_models/n_Model_parameters_{}.mat'.format(current_position))  ###########################
         #print(model_mat.keys())
         Model_parameters = model_mat['Model_parameters']
 #         print(s"defocus1 = {}, current pos = {}".format(defocus1, current_position))
@@ -192,10 +194,21 @@ for i in range(Num_of_data):
     
 
 
-# In[10]:
+# In[11]:
 
 
-np.save('vcm_data/train_data_one_im_norm_2set_256_vcm',DATA)    ##################################
-np.save('vcm_data/train_label_one_im_norm_2set_256_vcm',Label)  ##################################
+np.save('vcm_data/n_train_data_one_im_norm_2set_256_vcm',DATA)    ##################################
+np.save('vcm_data/n_train_label_one_im_norm_2set_256_vcm',Label)  ##################################
 
+
+# In[18]:
+
+
+#plt.imshow(DATA[4, :, :, 0])
+
+
+# In[17]:
+
+
+#print(Label[4, :])
 
