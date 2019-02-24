@@ -40,9 +40,9 @@ img_file_names = []
 # In[3]:
 
 
-image_size1 = 256
-image_size2 = 256
-Num_of_data = 40000###########################################
+image_size1 = 512
+image_size2 = 512
+Num_of_data = 20000###########################################
 
 print(len(File_names))
 
@@ -143,7 +143,7 @@ def Defocus(input_image, filter_size, scale):
 
 
 def Data_aug(im):
-    k = 180
+    k = 360
     caseidx = random.randint(1,4)
     if caseidx == 1:
         return im[im.shape[0]//2-k:im.shape[0]//2+k,im.shape[1]//2-k:im.shape[1]//2+k]
@@ -174,7 +174,7 @@ for i in range(Num_of_data//2):
     img = cv2.imread(File_names[idx],0)
     img_file_names.append(File_names[idx])
     while True:
-        if (img is not None) and (min(img.shape[0]-360,img.shape[1]-360) > 0):
+        if (img is not None) and (min(img.shape[0]-720,img.shape[1]-720) > 0):
             break
         idx = random.randint(0,len(File_names)-1)
         img = cv2.imread(File_names[idx],0)
@@ -207,14 +207,14 @@ for i in range(Num_of_data//2):
     DATA[2*i+1,:,:,0] = Defocus(Focused_image,Model_parameters[Data_space.index(defocus1),2],Model_parameters[Data_space.index(defocus1),3])
     Label[2*i+1,0] = current_position
     Label[2*i+1,1] = defocus1
-    if abs(defocus1-current_position)<26:
+    if abs(defocus1-current_position)<33:
         Label[2*i+1,2] = 1
     else:
         Label[2*i+1,2] = 0
 
 
-np.save('vcm_data/train_data_one_im_norm_2set_256_vcm_discrinimator',DATA)    ##################################
-np.save('vcm_data/train_label_one_im_norm_2set_256_vcm_discrinimator',Label)  ##################################
+np.save('vcm_data/train_data_one_im_norm_2set_512_vcm_discrinimator',DATA)    ##################################
+np.save('vcm_data/train_label_one_im_norm_2set_512_vcm_discrinimator',Label)  ##################################
 
 
 # In[10]:
