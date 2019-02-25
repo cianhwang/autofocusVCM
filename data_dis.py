@@ -4,11 +4,6 @@
 # In[1]:
 
 
-# coding: utf-8
-
-# In[1]:
-
-
 import numpy as np
 #import matplotlib.pyplot as plt
 import scipy.io,scipy.misc
@@ -17,9 +12,6 @@ import skimage.transform
 import random
 import cv2
 from scipy import signal
-
-#import matplotlib.pyplot as plt
-#get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 # In[2]:
@@ -42,7 +34,7 @@ img_file_names = []
 
 image_size1 = 512
 image_size2 = 512
-Num_of_data = 20000###########################################
+Num_of_data = 20000
 
 print(len(File_names))
 
@@ -53,7 +45,7 @@ print(len(File_names))
 # In[5]:
 
 
-DATA = np.zeros([Num_of_data,image_size1,image_size2,1],np.float32)
+DATA = np.zeros([Num_of_data,image_size1,image_size2,1],np.uint8)
 Label = np.zeros([Num_of_data,3],np.float32)
 
 
@@ -190,8 +182,8 @@ for i in range(Num_of_data//2):
     current_position = random.choice(Ground_truth_space)
     current_data_space = list(set(Data_space).difference(set([current_position])))
     defocus1 = random.choice(current_data_space)
-    DATA[2*i,:,:,0] = Focused_image[Focused_image.shape[0]//2-image_size1//2:Focused_image.shape[0]//2+image_size1//2,Focused_image.shape[1]//2-image_size2//2:Focused_image.shape[1]//2+image_size2//2]
-    DATA[2*i,:,:,0] = (DATA[2*i,:,:,0] - DATA[2*i,:,:,0].min())/(DATA[2*i,:,:,0].max() - DATA[2*i,:,:,0].min())
+    DATA1 = Focused_image[Focused_image.shape[0]//2-image_size1//2:Focused_image.shape[0]//2+image_size1//2,Focused_image.shape[1]//2-image_size2//2:Focused_image.shape[1]//2+image_size2//2]
+    DATA1 = (DATA1 - DATA1.min())/(DATA1.max() - DATA1.min())
     Label[2*i,0] = current_position
     Label[2*i,1] = current_position
     Label[2*i,2] = 1
@@ -204,7 +196,7 @@ for i in range(Num_of_data//2):
 #         print("focus img shape", Focused_image.shape)
 #         print(Model_parameters[10, :])
         
-    DATA[2*i+1,:,:,0] = Defocus(Focused_image,Model_parameters[Data_space.index(defocus1),2],Model_parameters[Data_space.index(defocus1),3])
+    DATA2 = Defocus(Focused_image,Model_parameters[Data_space.index(defocus1),2],Model_parameters[Data_space.index(defocus1),3])
     Label[2*i+1,0] = current_position
     Label[2*i+1,1] = defocus1
     if abs(defocus1-current_position)<33:
@@ -212,15 +204,12 @@ for i in range(Num_of_data//2):
     else:
         Label[2*i+1,2] = 0
 
-
+    DATA[2*i, :, :, 0] = (DATA1*255.0).astype(np.uint8)
+    DATA[2*i+1, :, :, 0] = (DATA2*255.0).astype(np.uint8)
 np.save('vcm_data/train_data_one_im_norm_2set_512_vcm_discrinimator',DATA)    ##################################
 np.save('vcm_data/train_label_one_im_norm_2set_512_vcm_discrinimator',Label)  ##################################
 
 
-# In[10]:
+# In[9]:
 
-
-#plt.imshow(DATA[5, :, :, 0])
-
-#print(Label[5, :])
 

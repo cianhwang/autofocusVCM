@@ -15,8 +15,6 @@ from scipy import signal
 # from PIL import Image
 #img = Image.open('image.png').convert('LA')
 #img.save('greyscale.png')
-#import matplotlib.pyplot as plt
-#get_ipython().run_line_magic('matplotlib', 'inline')
 
 
 # In[2]:
@@ -44,7 +42,7 @@ Num_of_data = 20000###########################################
 # In[4]:
 
 
-DATA = np.zeros([Num_of_data,image_size1,image_size2,1],np.float32)
+DATA = np.zeros([Num_of_data,image_size1,image_size2,1],np.uint8)
 Label = np.zeros([Num_of_data,2],np.float32)
 
 
@@ -107,11 +105,10 @@ def Defocus(input_image, filter_size, scale):
     #plt.imshow(pip2)
     #plt.show()
 
-    #idx1 = random.randint(-200,200)
+    #idx1 = random.randint(-200,200)''
     #idx2 = random.randint(-200,200)
     idx1 = 0
     idx2 = 0
-
    # print("M: {}, N: {}, imagesize1: {}, imagesize2: {}".format(M, N, image_size1, image_size2))
   #  print("pip2 shape: ", pip2.shape)
  #   print("scale = {}".format(scale))
@@ -175,8 +172,8 @@ for i in range(Num_of_data):
 #     print(current_position)
 #     print(defocus1)
     if defocus1 == current_position:
-        DATA[i,:,:,0] = Focused_image[Focused_image.shape[0]//2-image_size1//2:Focused_image.shape[0]//2+image_size1//2,Focused_image.shape[1]//2-image_size2//2:Focused_image.shape[1]//2+image_size2//2]
-        DATA[i,:,:,0] = (DATA[i,:,:,0] - DATA[i,:,:,0].min())/(DATA[i,:,:,0].max() - DATA[i,:,:,0].min())
+        DATA_ = Focused_image[Focused_image.shape[0]//2-image_size1//2:Focused_image.shape[0]//2+image_size1//2,Focused_image.shape[1]//2-image_size2//2:Focused_image.shape[1]//2+image_size2//2]
+        DATA_ = (DATA_ - DATA_.min())/(DATA_.max() - DATA_.min())
     else:
         model_mat = scipy.io.loadmat('vcm_models/n_Model_parameters_{}.mat'.format(current_position))  ###########################
         #print(model_mat.keys())
@@ -185,10 +182,10 @@ for i in range(Num_of_data):
 #         print("focus img shape", Focused_image.shape)
 #         print(Model_parameters[10, :])
         
-        DATA[i,:,:,0] = Defocus(Focused_image,Model_parameters[Data_space.index(defocus1),2],Model_parameters[Data_space.index(defocus1),3])
+        DATA_ = Defocus(Focused_image,Model_parameters[Data_space.index(defocus1),2],Model_parameters[Data_space.index(defocus1),3])
     Label[i,0] = current_position
     Label[i,1] = defocus1
-
+    DATA[i, :, :, 0] = (DATA_ * 255.0).astype(np.uint8)
 #     print(Label[i,:])
     
 
@@ -200,10 +197,18 @@ np.save('vcm_data/n_train_data_one_im_norm_2set_512_vcm',DATA)    ##############
 np.save('vcm_data/n_train_label_one_im_norm_2set_512_vcm',Label)  ##################################
 
 
-# In[14]:
+# In[12]:
 
 
-plt.imshow(DATA[1, :, :, 0])
+# import matplotlib.pyplot as plt
+# %matplotlib inline
+# plt.imshow(DATA[1, :, :, 0])
 
-print(Label[1, :])
+# print(Label[1, :])
+
+
+# In[13]:
+
+
+
 
