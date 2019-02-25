@@ -114,7 +114,7 @@ print(model.output_shape)
 opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0001)
 model.compile(loss='binary_crossentropy', optimizer=opt)
 
-model.fit(train_data, train_label[:, 2:], epochs = 100,batch_size = batch_size,verbose=1)
+model.fit(train_data.astype('float16')/255.0, train_label[:, 2:], epochs = epochs,batch_size = batch_size,verbose=1)
 
 model.save('my_model_dis.h5')
 

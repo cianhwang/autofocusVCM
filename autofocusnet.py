@@ -112,7 +112,7 @@ print(model.output_shape)
 opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0001)
 model.compile(loss='mse', optimizer=opt)
 
-model.fit(train_data[:,:,:,0:1], abs(train_label[:,1:2]-train_label[:,0:1])/100, epochs = epochs,batch_size = batch_size,verbose=1)
+model.fit(train_data[:,:,:,0:1].astype('float16')/255.0, abs(train_label[:,1:2]-train_label[:,0:1])/100, epochs = epochs,batch_size = batch_size,verbose=1)
 
 
 
