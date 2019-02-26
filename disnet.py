@@ -84,15 +84,15 @@ train_label = label
 # In[7]:
 input_image1 = Input(shape=(512,512,1), name = "input")
 #layer1_1 = Conv2D(4, (8, 8), 8,padding='valid',activation=None,use_bias=False,kernel_initializer = my_init,trainable=True,name='layer1')(input_image1)
-layer1_1 = Conv2D(1, (8, 8), 8,padding='same',activation=relu, name="Conv1_1")(input_image1)
+layer1_1 = Conv2D(8, (9, 9), 4,padding='same',activation=relu, name="Conv1_1")(input_image1)
 
-layer2_1 = Conv2D(1, (8, 8), 8,padding='same',activation=relu, name="Conv2_1")(layer1_1)
+layer2_1 = Conv2D(16, (5, 5), 2,padding='same',activation=relu, name="Conv2_1")(layer1_1)
 
-#layer3_1 = Conv2D(32, (3, 3), 2,padding='same',activation=relu, name="Conv3_1")(layer2_1)
+layer3_1 = Conv2D(32, (3, 3), 2,padding='same',activation=relu, name="Conv3_1")(layer2_1)
 
-#layer4_1 = Conv2D(32, (3, 3), 2,padding='same',activation=relu, name="Conv4_1")(layer3_1)
+layer4_1 = Conv2D(32, (3, 3), 2,padding='same',activation=relu, name="Conv4_1")(layer3_1)
 
-flattened = Flatten(name="flat")(layer2_1)
+flattened = Flatten(name="flat")(layer4_1)
 #Dp1 = Dropout(0.5)(flattened)
 dense1 = Dense(10, name="d1")(flattened)
 #ReLU1 = ReLU(name="lr1")(dense1)
@@ -114,7 +114,7 @@ print(model.output_shape)
 opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0001)
 model.compile(loss='binary_crossentropy', optimizer=opt)
 
-model.fit(train_data.astype('float16')/255.0, train_label[:, 2:], epochs = epochs,batch_size = batch_size,verbose=1)
+model.fit(train_data.astype('float16')/255.0, train_label[:, 2:], epochs = epochs,batch_size = batch_size,verbose=1, validation_split = 0.2)
 
 model.save('my_model_dis_512.h5')
 
