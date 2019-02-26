@@ -55,9 +55,9 @@ train_label_path = 'vcm_data/n_train_label_one_im_norm_2set_512_vcm.npy'
 # In[4]:
 
 
-train_data = np.load(train_data_path)
+train_data = np.load(train_data_path)[:10000, :, :, :]
 #test_data = np.load(test_data_path)
-train_label = np.load(train_label_path)
+train_label = np.load(train_label_path)[:10000, :]
 
 
 # In[5]:
