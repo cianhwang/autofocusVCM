@@ -73,7 +73,7 @@ test_label = (abs(test_label[:, 0] - test_label[:, 1]) <= 33)
 # train_label = label[:10000, :]
 
 
-# In[7]:
+# In[6]:
 
 
 # #to_categorical(train_label[:, 2]).shape
@@ -85,7 +85,7 @@ test_label = (abs(test_label[:, 0] - test_label[:, 1]) <= 33)
 # print(train_label[idx, :])
 
 
-# In[8]:
+# In[7]:
 
 
 # plt.imshow(test_data[idx, :, :, 0])
@@ -93,7 +93,7 @@ test_label = (abs(test_label[:, 0] - test_label[:, 1]) <= 33)
 # print(test_label[idx])
 
 
-# In[9]:
+# In[8]:
 
 
 # In[7]:
@@ -122,14 +122,14 @@ model.summary()
 
 tcbc = TensorBoard(log_dir='1')
 
-filepath="models/dis_train_on_generate/{epoch:03d}-{val_loss:.2f}.hdf5"
-checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=False, mode='max',period=2)
+filepath="models/dis_train_on_generate/weights-{epoch:03d}-{val_loss:.2f}.h5"
+checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=False, save_weights_only=True,mode='max',period=2)
 
 
 print(model.output_shape)
 
 
-# In[10]:
+# In[9]:
 
 
 def data_gen(features, labels, batch_size):
@@ -141,7 +141,7 @@ def data_gen(features, labels, batch_size):
             yield (batch_features, batch_labels)
 
 
-# In[11]:
+# In[10]:
 
 
 opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0001)
@@ -158,28 +158,28 @@ model.fit_generator(data_gen(train_data, to_categorical(train_label[:, 2:]), bat
                     verbose=1, callbacks = [tcbc, checkpoint])
 
 
-# In[ ]:
+# In[11]:
 
 
-model.save('my_model_dis_512.h5')
+# model.save('my_model_dis_512.h5')
 
-model.save_weights('my_dis_weights_512.h5')
+# model.save_weights('my_dis_weights_512.h5')
 # # model.load_weights('my_dis_weights_512.h5')
 
 
-# In[ ]:
+# In[12]:
 
 
 # print(to_categorical(train_label[:10, 2:]))
 
 
-# In[ ]:
+# In[13]:
 
 
 # pred  = model.predict(train_data[:, :, :, :50])
 
 
-# In[ ]:
+# In[14]:
 
 
 # idx = 25
