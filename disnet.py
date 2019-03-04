@@ -122,7 +122,7 @@ model.summary()
 
 tcbc = TensorBoard(log_dir='1')
 
-filepath="models/dis_train_on_generate/weights-{epoch:03d}-{val_loss:.2f}.h5"
+filepath="models/dis_train_on_generate/weights-adam-{epoch:03d}-{val_loss:.3f}.h5"
 checkpoint = ModelCheckpoint(filepath, monitor='val_loss', verbose=1, save_best_only=False, save_weights_only=True,mode='max',period=2)
 
 
@@ -145,7 +145,7 @@ def data_gen(features, labels, batch_size):
 
 
 opt = Adam(lr=0.001, beta_1=0.9, beta_2=0.999, epsilon=None, decay=0.0001)
-model.compile(loss='binary_crossentropy', optimizer=opt)
+model.compile(loss='binary_crossentropy', metrics=['accuracy'],optimizer='Adam')
 
 # model.fit(train_data[:,:,:,0:1].astype('float16')/255.0, to_categorical(train_label[:, 2:]), 
 #           epochs = 100,batch_size = batch_size,
