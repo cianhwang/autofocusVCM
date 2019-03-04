@@ -3,3 +3,4 @@
 *.npy
 *.hdf5
 events*
+.DS_Store
