@@ -11,4 +11,4 @@ for i = 1: 10
    hold on;
 end
 x = Model_parameters(:, 2);
-y = y*10-100;
+y = y/10-1;
